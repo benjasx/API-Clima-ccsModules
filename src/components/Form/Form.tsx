@@ -5,7 +5,7 @@ import { SearchType } from "../../types";
 import Alert from "../Alert/Alert";
 
 type FormProps = {
-    fetcWeather: () => void
+    fetcWeather: (searrch: SearchType) => Promise<void>
 }
 
 export default function Form({fetcWeather}:FormProps) {
@@ -33,7 +33,7 @@ export default function Form({fetcWeather}:FormProps) {
     }
 
     setAlert("");
-    fetcWeather()
+    fetcWeather(search)
     
   };
 
