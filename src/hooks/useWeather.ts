@@ -2,7 +2,7 @@ import axios from "axios";
 import { SearchType } from "../types";
 //import { object, string, number,  InferOutput, parse} from "valibot";
 import { z } from "zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 //Type Guards
 /* function isWeatherResponse (weather : unknown) : weather is Weather{
@@ -41,20 +41,25 @@ export type Weather = z.infer<typeof Weather>;
 
 type Weather = InferOutput<typeof WeatherSchema>; */
 
+const initialState = {
+  name:'',
+  main:{
+    temp:0,
+    temp_max:0,
+    temp_min:0
+  }
+}
 
 export default function useWeather() {
 
-  const [weather, setWeather] = useState<Weather>({
-    name:'',
-    main:{
-      temp:0,
-      temp_max:0,
-      temp_min:0
-    }
-  })
+  const [weather, setWeather] = useState<Weather>( initialState)
+
+  const [loading, setLoading] = useState(false)
 
   const fetcWeather = async (searrch: SearchType) => {
     const appId = import.meta.env.VITE_API_KEY;
+    setLoading(true)
+    setWeather(initialState)
     try {
       const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${searrch.city},${searrch.country}&appid=${appId}`;
       const { data } = await axios(geoUrl);
@@ -97,11 +102,17 @@ export default function useWeather() {
 
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false)
     }
   };
 
+  const hasWeatherData = useMemo(() => weather.name, [weather])
+
   return {
     weather,
+    loading,
     fetcWeather,
+    hasWeatherData
   };
 }
