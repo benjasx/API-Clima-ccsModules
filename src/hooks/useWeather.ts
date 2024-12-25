@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SearchType } from "../types";
 //import { object, string, number,  InferOutput, parse} from "valibot";
-import { set, z } from "zod";
+import { z } from "zod";
 import { useMemo, useState } from "react";
 
 //Type Guards
@@ -61,7 +61,7 @@ export default function useWeather() {
     setLoading(true)
     setWeather(initialState)
     try {
-      const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${searrch.city},${searrch.country}&appid=${appId}`;
+      const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${searrch.city},${searrch.country}&appid=${appId}`;
       const { data } = await axios(geoUrl);
 
       if(!data[0]){
